@@ -1,0 +1,24 @@
+name: Trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: execute
+      run: |
+        gh workflow run process.yml --repo ${{ github.repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOK }}
+        
+    - name: delay
+      run: sleep 10800
+      
+    - name: next
+      run: |
+        gh workflow run trigger.yml --repo ${{ github.repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOK }}

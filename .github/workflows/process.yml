@@ -11,7 +11,7 @@ permissions:
 
 jobs:
  checks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: "ownership check"
         env:
@@ -37,7 +37,7 @@ jobs:
           : "Ignore"
 
  inits:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: success() && true
     steps:
       - name: "checkout"

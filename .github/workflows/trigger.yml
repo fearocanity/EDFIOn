@@ -15,7 +15,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GIT_TOK }}
         
     - name: delay
-      run: sleep 10800
+      run: sleep 7200
       
     - name: next
       run: |

@@ -23,13 +23,16 @@ jobs:
         env:
           trig_actor: ${{ github.triggering_actor }}
           repo_ownr: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOK }}
         run: |
           case "${trig_actor}" in
             "${repo_ownr}"|github-actions*) : ;;
-            *) printf '%s\n'"Runner prevented to run because the script is executed by an untrusted user \"${trig_actor}\". (Only owner can execute, for security)" >&2 ; exit 1 ;;
+            *) printf '%s\n'"Runner prevented to run because the script is executed by an untrusted user \"${trig_actor}\". (Only owner can execute, for security)" >&2 ; gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}" ;;
           esac
 
       - name: "success checker"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOK }}
         run: |
           if [[ "${{ github.event.workflow_run.conclusion }}" != "success" ]]; then
               printf '%s\n' "Exiting... The init banner did not succeed..." >&2

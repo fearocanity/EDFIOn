@@ -22,7 +22,7 @@ jobs:
           case "${trig_actor}" in
             "${repo_ownr}"|github-actions*) : ;;
             *) printf '%s\n'"Runner prevented to run because the script is executed by an untrusted user \"${trig_actor}\". (Only owner can execute, for security)" >&2
-               gh workflow cancel "${{ github.run_id }}" --repo "${{ github.repository }}" ;;
+               gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}" ;;
           esac
 
       - name: "chk wf status"
@@ -35,7 +35,7 @@ jobs:
           if grep -qE 'in_progress' <<< "${status}"; then
             echo -e '> [!CAUTION]'"\n> The bot_runner is still running, The script prevented this workflow to run to avoid conflicts... Cancelling"'!!' >> "${GITHUB_STEP_SUMMARY}"
             # Cancel Job
-            gh workflow cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
+            gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
           fi
           : "Ignore"
 
@@ -52,7 +52,7 @@ jobs:
         run: |
           if [[ "$(<./fb/frameiterator)" -gt "$(sed -nE 's/.*total_frame="([^"]*)".*/\1/p' config.conf)" ]]; then
              echo -e '> [!NOTE]'"\n> The Bot was Finished Running" >> "${GITHUB_STEP_SUMMARY}"
-             gh workflow cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
+             gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
           fi
 
       - name: "initialize package"

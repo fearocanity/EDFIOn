@@ -33,7 +33,7 @@ jobs:
         run: |
           if [[ "${{ github.event.workflow_run.conclusion }}" != "success" ]]; then
               printf '%s\n' "Exiting... The init banner did not succeed..." >&2
-              gh workflow cancel "${{ github.run_id }}" --repo ${{ github.repository }}
+              gh run cancel "${{ github.run_id }}" --repo ${{ github.repository }}
           fi
 
       - name: "check latest || (not implemented) dispatches if fails"
@@ -44,7 +44,7 @@ jobs:
           if [ "${LATEST_COMMIT}" != "${GITHUB_SHA}" ]; then
              printf '%s\n' "Current commit is not the latest." >&2
              # curl -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -X POST -d '{"ref":"'"${{ github.ref }}"'","inputs":{}}' "https://api.github.com/repos/${{ github.repository }}/actions/workflows/process.yml/dispatches"
-             gh workflow cancel "${{ github.run_id }}" --repo ${{ github.repository }}
+             gh run cancel "${{ github.run_id }}" --repo ${{ github.repository }}
           fi
        
       - name: "check if repo checker have succeed"
@@ -55,7 +55,7 @@ jobs:
           if [[ "${conclusion}" = "failure" ]]; then
               printf '%s\n' "failed due to repo checker failure." >&2
               gh workflow run repo-checker.yml --repo ${{ github.repository }}
-              gh workflow cancel "${{ github.run_id }}" --repo ${{ github.repository }}
+              gh run cancel "${{ github.run_id }}" --repo ${{ github.repository }}
           fi
 
       - name: "frameiterator check"
@@ -63,7 +63,7 @@ jobs:
           if [[ "$(<./fb/frameiterator)" -ge "$(sed -nE 's|.*total_frame="([^"]*)".*|\1|g' ./config.conf)" ]]; then
               printf '%s\n' "trigger.yml disabled, because the posting is finished" >&2
               gh workflow disable trigger.yml --repo ${{ github.repository }}
-              gh workflow cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
+              gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOK }}

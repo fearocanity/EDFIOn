@@ -65,7 +65,6 @@ jobs:
         run: |
           if [[ "$(<./fb/frameiterator)" -ge "$(sed -nE 's|.*total_frame="([^"]*)".*|\1|g' ./config.conf)" ]]; then
               printf '%s\n' "trigger.yml disabled, because the posting is finished" >&2
-              gh workflow disable trigger.yml --repo ${{ github.repository }}
               gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
           fi
         env:

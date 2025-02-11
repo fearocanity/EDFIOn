@@ -52,6 +52,7 @@ jobs:
         run: |
           if [[ "$(<./fb/frameiterator)" -gt "$(sed -nE 's/.*total_frame="([^"]*)".*/\1/p' config.conf)" ]]; then
              echo -e '> [!NOTE]'"\n> The Bot was Finished Running" >> "${GITHUB_STEP_SUMMARY}"
+             gh workflow disable trigger.yml --repo ${{ github.repository }}
              gh run cancel "${{ github.run_id }}" --repo "${{ github.repository }}"
           fi
 
